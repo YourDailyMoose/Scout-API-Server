@@ -639,5 +639,5 @@ async function handleExit() {
     }
 }
 
-process.on('SIGINT', handleExit());
-process.on('SIGTERM', handleExit());
+process.on('SIGINT', handleExit);
+process.on('SIGTERM', handleExit);
