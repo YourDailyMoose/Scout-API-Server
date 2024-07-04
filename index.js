@@ -27,7 +27,6 @@ const { connectToDatabase,
     getTicketInfo,
     staffOauthCallbackData,
     fetchStaffUserData,
-    saveMetricsData,
     closeDatabaseConnection
  } = require("./database");
 
@@ -629,3 +628,16 @@ app.get('/staff/userdata', authenticateStaffToken, async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 }); 
+
+async function handleExit() {
+  try {
+    await closeDatabaseConnection();
+  } catch (error) {
+    console.error('Error during exit:', error);
+  } finally {
+      process.exit(0);
+    }
+}
+
+process.on('SIGINT', handleExit());
+process.on('SIGTERM', handleExit());
