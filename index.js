@@ -10,7 +10,6 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const winston = require('winston');
 const morgan = require('morgan');
-const axios = require("axios");
 
 const { connectToDatabase,
     getDB,
@@ -295,9 +294,6 @@ app.get('/userdata', authenticateToken, async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-
-
-
 
 app.get('/bot/guilds', authenticateToken, async (req, res) => {
     try {
