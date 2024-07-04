@@ -11,6 +11,7 @@ const rateLimit = require('express-rate-limit');
 const winston = require('winston');
 const morgan = require('morgan');
 const axios = require('axios');
+const Long = require('mongodb');
 
 const { connectToDatabase,
     getGuildSettings,
