@@ -31,24 +31,28 @@ function getDB() {
     return db;
 }
 
-async function closeDatabaseConnection() {
-    if (client) {
-        try {
-            await client.close();
-            console.log('Disconnected from MongoDB for shutdown');
-        } catch (error) {
-            console.error('Error disconnecting from MongoDB:', error);
-            throw error;
-        }
-    } else {
-        console.log('MongoDB client is not provided or not initialized.');
+
+
+async function wipeGuildSettings(guildId) {
+    try {
+        await db.collection('botSettings').deleteOne({ _id: guildId });
+        return (true)
+    } catch (error) {
+        console.error(`Error deleting guild ${guildId} from the database:`, error);
+        return (false)
     }
 }
 
-async function getGuildBotColours(guildId) {
+
+
+async function getGuildSettings(guildId) {
+    if (!guildId) {
+        console.error('Error: guildId is undefined');
+        return;
+    }
+
     const longGuildId = Long.fromString(guildId);
-    const guild = await db.collection('botSettings').findOne({ _id: longGuildId });
-    return guild.serverSettings.colours;
+    return await db.collection('botSettings').findOne({ _id: longGuildId });
 }
 
 async function isUserBlacklisted(userId) {
@@ -252,11 +256,43 @@ async function fetchStaffUserData(dataKey) {
 
 }
 
+async function closeDatabaseConnection() {
+    if (client) {
+        try {
+            await client.close();
+            console.log('Disconnected from MongoDB for shutdown');
+        } catch (error) {
+            console.error('Error disconnecting from MongoDB:', error);
+            throw error;
+        }
+    } else {
+        console.log('MongoDB client is not provided or not initialized.');
+    }
+}
+
+async function saveMetricsData(data) {
+    try {
+        const collection = db.collection("metricsData");
+        await collection.insertOne(data);
+        console.log('Data successfully saved to MongoDB');
+    } catch (error) {
+        console.error('Error saving data to MongoDB:', error);
+        throw error; // Rethrowing the error might be optional based on how you want to handle it.
+    }
+}
+
+
+async function getGuildBotColours(guildId) {
+    const longGuildId = Long.fromString(guildId);
+    const guild = await db.collection('botSettings').findOne({ _id: longGuildId });
+    return guild.serverSettings.colours;
+}
+
 module.exports = {
     connectToDatabase,
     getDB,
-    closeDatabaseConnection,
-    getGuildBotColours,
+    wipeGuildSettings,
+    getGuildSettings,
     isUserBlacklisted,
     oauthCallbackData,
     fetchUserData,
@@ -266,8 +302,11 @@ module.exports = {
     logoutUser,
     isModuleEnabled,
     updateServerSettings,
-    getBlacklists,
     getTicketInfo,
     staffOauthCallbackData,
-    fetchStaffUserData
-};
+    fetchStaffUserData,
+    saveMetricsData,
+    closeDatabaseConnection,
+    getGuildBotColours
+
+}
