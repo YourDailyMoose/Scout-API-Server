@@ -1,5 +1,5 @@
-dotenv.config();
 const dotenv = require('dotenv');
+dotenv.config();
 const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
@@ -13,8 +13,6 @@ const morgan = require('morgan');
 
 const app = express();
 const PORT = 3000;
-
-//test
 
 // Use cors middleware with specific origin
 const corsOptions = {
