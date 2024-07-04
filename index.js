@@ -14,6 +14,8 @@ const morgan = require('morgan');
 const app = express();
 const PORT = 3000;
 
+//test
+
 // Use cors middleware with specific origin
 const corsOptions = {
   origin: ['https://scoutbot.xyz', 'https://staff.scoutbot.xyz'],
