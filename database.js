@@ -7,8 +7,14 @@ let db;
 // Path to your certificate
 const credentials = process.env.PATH_TO_CERT;
 
+const mongoURI = process.env.MONGODB_URI;
+if (!mongoURI) {
+    console.error('MONGO_URI environment variable is not set.');
+    process.exit(1);
+}
+
 // MongoDB connection 
-const client = new MongoClient(process.env.MONGODB_URI, {
+const client = new MongoClient(mongoURI, {
     tlsCertificateKeyFile: credentials,
     serverApi: ServerApiVersion.v1,
 });
