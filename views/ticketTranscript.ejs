@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap">
+  <title>Scout Support | Ticket <%= ticket._id.$numberLong %>
+  </title>
+  <style>
+    body {
+      background-color: #36393f;
+      color: #dcddde;
+      font-family: 'Lexend', sans-serif;
+    }
+
+    .message {
+      background-color: #2f3136;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .message img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  border: 2px solid #7289da; /* Add a border to the profile picture */
+}
+
+    .message p {
+      margin: 0;
+    }
+
+    .embed {
+      background-color: #2f3136;
+      border-radius: 5px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    .embed h2 {
+      color: #7289da;
+      margin: 0;
+    }
+
+    .embed p {
+      margin: 0;
+    }
+
+    .embed img {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Ticket <%= ticket._id.$numberLong %>
+  </h1>
+  <p>Opened by: <%= ticket.ticketUser %>
+  </p>
+  <p>Opened at: <%= new Date(ticket.timestampOpened * 1000).toLocaleString() %>
+  </p>
+  <p>Status: <%= ticket.status %>
+  </p>
+  <% ticket.transcript.forEach(message => { %>
+    <div class="message">
+      <img src="<%= message.author.avatar %>" alt="<%= message.author.tag %>">
+      <p><%= message.author.tag %>: <%= message.content %></p>
+      <p><%= new Date(message.timestamp).toLocaleString() %></p>
+      <% message.embeds.forEach(embed => { %>
+        <div class="embed">
+          <h2><%= embed.title %></h2>
+          <p><%= embed.description %></p>
+          <% embed.fields.forEach(field => { %>
+            <h3><%= field.name %></h3>
+            <p><%= field.value %></p>
+          <% }); %>
+          <% if (embed.image) { %>
+            <img src="<%= embed.image.url %>" alt="<%= embed.title %>">
+          <% } %>
+          <p><%= embed.footer %></p>
+        </div>
+      <% }); %>
+    </div>
+  <% }); %>
+</body>
+
+</html>
