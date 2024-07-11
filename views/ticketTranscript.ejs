@@ -1,34 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scout Support | Ticket <%= ticket._id.$numberLong %></title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap">
-  <title>Scout Support | Ticket <%= ticket._id.$numberLong %>
-  </title>
   <style>
     body {
       background-color: #36393f;
       color: #dcddde;
       font-family: 'Lexend', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      width: 80%;
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #2f3136;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+
+    p {
+      margin: 0;
+      padding: 5px 0;
+      font-size: 1em;
     }
 
     .message {
-      background-color: #2f3136;
+      display: flex;
+      align-items: center;
+      background-color: #23272a;
       border-radius: 5px;
       padding: 10px;
       margin-bottom: 10px;
     }
 
     .message img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-  border: 2px solid #7289da; /* Add a border to the profile picture */
-}
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+      border: 2px solid #7289da;
+    }
 
-    .message p {
+    .message-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message-content p {
       margin: 0;
+    }
+
+    .message-timestamp {
+      font-size: 0.8em;
+      color: #72767d;
     }
 
     .embed {
@@ -50,24 +91,36 @@
     .embed img {
       max-width: 100%;
       height: auto;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+
+    .embed h3 {
+      margin: 5px 0;
+    }
+
+    .ticket-info {
+      margin-bottom: 20px;
     }
   </style>
 </head>
 
 <body>
-  <h1>Ticket <%= ticket._id.$numberLong %>
-  </h1>
-  <p>Opened by: <%= ticket.ticketUser %>
-  </p>
-  <p>Opened at: <%= new Date(ticket.timestampOpened * 1000).toLocaleString() %>
-  </p>
-  <p>Status: <%= ticket.status %>
-  </p>
-  <% ticket.transcript.forEach(message => { %>
-    <div class="message">
-      <img src="<%= message.author.avatar %>" alt="<%= message.author.tag %>">
-      <p><%= message.author.tag %>: <%= message.content %></p>
-      <p><%= new Date(message.timestamp).toLocaleString() %></p>
+  <div class="container">
+    <div class="ticket-info">
+      <h1>Ticket <%= ticket._id.$numberLong %></h1>
+      <p><strong>Opened by:</strong> <%= ticket.ticketUser %></p>
+      <p><strong>Opened at:</strong> <%= new Date(ticket.timestampOpened * 1000).toLocaleString() %></p>
+      <p><strong>Status:</strong> <%= ticket.status %></p>
+    </div>
+    <% ticket.transcript.forEach(message => { %>
+      <div class="message">
+        <img src="<%= message.author.avatar %>" alt="<%= message.author.tag %>">
+        <div class="message-content">
+          <p><strong><%= message.author.tag %>:</strong> <%= message.content %></p>
+          <p class="message-timestamp"><%= new Date(message.timestamp).toLocaleString() %></p>
+        </div>
+      </div>
       <% message.embeds.forEach(embed => { %>
         <div class="embed">
           <h2><%= embed.title %></h2>
@@ -82,8 +135,8 @@
           <p><%= embed.footer %></p>
         </div>
       <% }); %>
-    </div>
-  <% }); %>
+    <% }); %>
+  </div>
 </body>
 
 </html>
